@@ -2,7 +2,7 @@
 
 # check user role need access as root
 if [ "$EUID" -ne 0 ]
-  then echo "This script need access as root, please run with sudo"
+  then echo "This script need access as root!\n please run with sudo"
   exit
 fi
 
