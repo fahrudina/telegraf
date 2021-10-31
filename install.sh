@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# check user role need access as root
+if [ "$EUID" -ne 0 ]
+  then echo "This script need access as root, please run with sudo"
+  exit
+fi
+
 # download telegraf binary
 VERSION="1.20.2"
 wget https://dl.influxdata.com/telegraf/releases/telegraf-${VERSION}_linux_amd64.tar.gz -P /tmp/telegraf && tar xf /tmp/telegraf/telegraf-${VERSION}_linux_amd64.tar.gz -C /tmp/telegraf && cd /tmp/telegraf/telegraf-${VERSION}
