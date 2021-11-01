@@ -8,7 +8,12 @@ fi
 
 # download telegraf binary
 VERSION="1.20.2"
-wget https://dl.influxdata.com/telegraf/releases/telegraf-${VERSION}_linux_amd64.tar.gz -P /tmp/telegraf && tar xf /tmp/telegraf/telegraf-${VERSION}_linux_amd64.tar.gz -C /tmp/telegraf && cd /tmp/telegraf/telegraf-${VERSION}
+
+mkdir -p /tmp/telegraf && \
+cd /tmp/telegraf && \
+curl -O https://dl.influxdata.com/telegraf/releases/telegraf-${VERSION}_linux_amd64.tar.gz && \
+    tar xf telegraf-${VERSION}_linux_amd64.tar.gz && \
+    cd telegraf-${VERSION}
 
 # set telegraf service for auto restart when server restart
 # command to reload the systemd manager configuration
@@ -53,16 +58,14 @@ ExecStart=/usr/bin/telegraf "--config" $URL "--service" "telegraf" "--config-dir
 ExecReload=/bin/kill -HUP $MPID
 Restart=always
 RestartSec=60
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=/var/log/telegraf/telegraf.log
+StandardError=/var/log/telegraf/telegraf.log
 RestartForceExitStatus=SIGPIPE
 KillMode=control-group
 
 [Install]
 WantedBy=multi-user.target
 EOF
-
-#ExecStart=/usr/bin/telegraf -config /etc/telegraf/telegraf.conf -config-directory /etc/telegraf/telegraf.d $TELEGRAF_OPTS -watch-config poll
 
 # setup
 cp -r etc/* /etc/ && cp -r var/log/* /var/log/ && cp -r usr/bin/* /usr/bin/ && cp -r usr/lib/telegraf/scripts/telegraf.service /etc/systemd/system/
