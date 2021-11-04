@@ -41,7 +41,7 @@ function Question-To-Install {
     $yes = New-Object System.Management.Automation.Host.ChoiceDescription '&Yes', 'Install ulang'
     $no = New-Object System.Management.Automation.Host.ChoiceDescription '&No', 'Tidak install ulang'
     $options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no)
-    $result = $host.ui.PromptForChoice('Install ulang?', $options, 0)
+    $result = $host.ui.PromptForChoice('Install ulang?', 'Apakah anda ingin install?', $options, 0)
 
     switch ($result)
         {
