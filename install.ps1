@@ -8,8 +8,13 @@
 #rem
 #rem ##########################################################################
 
-$config = 'C:\Program Files\InfluxData\telegraf\telegraf.conf'
+function Is-Service-Exist {
+    #check service exist
+    $service = Get-Service -Name W32Time -ErrorAction SilentlyContinue
+    return ($service.Length -gt 0) 
+}
 
+$config = 'C:\Program Files\InfluxData\telegraf\telegraf.conf'
 function Register-Service {
     Write-Host "install Telegraf as a Windows service so that it starts automatically along with our system" 
         C:\'Program Files'\InfluxData\telegraf\telegraf.exe --service install --config $config
@@ -20,6 +25,12 @@ function Register-Service {
 }
 
 function Install-Telegraf {
+    if (Is-Service-Exist) {
+        # if service allready exist in the system
+        # stop it before remove
+        C:\'Program Files'\InfluxData\telegraf\telegraf.exe --config $config --service stop
+    }
+
     Write-Host "remove folder"
         Remove-Item -LiteralPath 'C:\Program Files\InfluxData\telegraf' -Force -Recurse -Confirm:$false
     Write-Host "download telegraf" 
@@ -62,8 +73,7 @@ if (Test-Path -Path $file -PathType Leaf) {
         Install-Telegraf
     }else {
         #check service exist
-        $service = Get-Service -Name W32Time -ErrorAction SilentlyContinue
-        if ($service.Length -eq 0) {
+        if (-not(Is-Service-Exist)) {
             # Service not exist in system try to register service to system and start it
             Register-Service
         }
