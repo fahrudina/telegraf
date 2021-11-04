@@ -33,11 +33,6 @@ function Install-Telegraf {
 }
 
 function Question-To-Install {
-    # param(
-    #     [Parameter(Mandatory)]
-    #     [string]$Name
-    # )
-
     $yes = New-Object System.Management.Automation.Host.ChoiceDescription '&Yes', 'Install ulang'
     $no = New-Object System.Management.Automation.Host.ChoiceDescription '&No', 'Tidak install ulang'
     $options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no)
@@ -53,7 +48,7 @@ function Question-To-Install {
                 $install = $false
             }
         }
-    Write-Output $message
+    Write-Host $message
     return $install
 }
 
